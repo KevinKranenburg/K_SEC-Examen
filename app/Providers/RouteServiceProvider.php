@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Routing\Router;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -17,36 +17,47 @@ class RouteServiceProvider extends ServiceProvider
     protected $namespace = 'App\Http\Controllers';
 
     /**
-     * The path to the "home" route for your application.
-     *
-     * @var string
-     */
-    public const HOME = '/home';
-
-    /**
      * Define your route model bindings, pattern filters, etc.
+     *
+     * @param \Illuminate\Routing\Router $router
      *
      * @return void
      */
-    public function boot()
+    public function boot(Router $router)
     {
         //
 
-        parent::boot();
+        parent::boot($router);
     }
 
     /**
      * Define the routes for the application.
      *
+     * @param \Illuminate\Routing\Router $router
+     *
      * @return void
      */
-    public function map()
+    public function map(Router $router)
     {
-        $this->mapApiRoutes();
+        $this->mapWebRoutes($router);
+        $this->mapApiRoutes($router);
+    }
 
-        $this->mapWebRoutes();
-
-        //
+    /**
+     * Define the "api" routes for the application.
+     *
+     *
+     * @param \Illuminate\Routing\Router $router
+     *
+     * @return void
+     */
+    protected function mapApiRoutes(Router $router)
+    {
+        $router->group([
+            'namespace' => $this->namespace,
+        ], function ($router) {
+            require app_path('Http/routes-api.php');
+        });
     }
 
     /**
@@ -54,27 +65,16 @@ class RouteServiceProvider extends ServiceProvider
      *
      * These routes all receive session state, CSRF protection, etc.
      *
-     * @return void
-     */
-    protected function mapWebRoutes()
-    {
-        Route::middleware('web')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/web.php'));
-    }
-
-    /**
-     * Define the "api" routes for the application.
-     *
-     * These routes are typically stateless.
+     * @param \Illuminate\Routing\Router $router
      *
      * @return void
      */
-    protected function mapApiRoutes()
+    protected function mapWebRoutes(Router $router)
     {
-        Route::prefix('api')
-             ->middleware('api')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/api.php'));
+        $router->group([
+            'namespace' => $this->namespace, 'middleware' => 'web',
+        ], function ($router) {
+            require app_path('Http/routes.php');
+        });
     }
 }

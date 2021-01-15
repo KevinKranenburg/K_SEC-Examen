@@ -15,8 +15,6 @@ namespace Symfony\Component\Console\Event;
  * Allows to do things before the command is executed, like skipping the command or changing the input.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @final since Symfony 4.4
  */
 class ConsoleCommandEvent extends ConsoleEvent
 {
@@ -27,6 +25,8 @@ class ConsoleCommandEvent extends ConsoleEvent
 
     /**
      * Indicates if the command should be run or skipped.
+     *
+     * @var bool
      */
     private $commandShouldRun = true;
 

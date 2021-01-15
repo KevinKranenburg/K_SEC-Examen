@@ -21,30 +21,30 @@ use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
 interface FlashBagInterface extends SessionBagInterface
 {
     /**
-     * Adds a flash message for the given type.
+     * Adds a flash message for type.
      *
      * @param string $type
-     * @param mixed  $message
+     * @param string $message
      */
     public function add($type, $message);
 
     /**
-     * Registers one or more messages for a given type.
+     * Registers a message for a given type.
      *
      * @param string       $type
-     * @param string|array $messages
+     * @param string|array $message
      */
-    public function set($type, $messages);
+    public function set($type, $message);
 
     /**
      * Gets flash messages for a given type.
      *
-     * @param string $type    Message category type
-     * @param array  $default Default value if $type does not exist
+     * @param string $type    Message category type.
+     * @param array  $default Default value if $type does not exist.
      *
      * @return array
      */
-    public function peek($type, array $default = []);
+    public function peek($type, array $default = array());
 
     /**
      * Gets all flash messages.
@@ -57,11 +57,11 @@ interface FlashBagInterface extends SessionBagInterface
      * Gets and clears flash from the stack.
      *
      * @param string $type
-     * @param array  $default Default value if $type does not exist
+     * @param array  $default Default value if $type does not exist.
      *
      * @return array
      */
-    public function get($type, array $default = []);
+    public function get($type, array $default = array());
 
     /**
      * Gets and clears flashes from the stack.

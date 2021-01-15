@@ -2,20 +2,9 @@
 
 namespace Illuminate\Routing;
 
-use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
-use Illuminate\Contracts\Routing\UrlGenerator as UrlGeneratorContract;
-use Illuminate\Contracts\View\Factory as ViewFactoryContract;
-use Illuminate\Routing\Contracts\ControllerDispatcher as ControllerDispatcherContract;
 use Illuminate\Support\ServiceProvider;
-use Nyholm\Psr7\Factory\Psr17Factory;
-use Nyholm\Psr7\Response as NyholmPsrResponse;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Zend\Diactoros\Response as PsrResponse;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
-use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
-use Zend\Diactoros\Response as ZendPsrResponse;
-use Zend\Diactoros\ServerRequestFactory;
 
 class RoutingServiceProvider extends ServiceProvider
 {
@@ -27,12 +16,16 @@ class RoutingServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerRouter();
+
         $this->registerUrlGenerator();
+
         $this->registerRedirector();
+
         $this->registerPsrRequest();
+
         $this->registerPsrResponse();
+
         $this->registerResponseFactory();
-        $this->registerControllerDispatcher();
     }
 
     /**
@@ -42,7 +35,7 @@ class RoutingServiceProvider extends ServiceProvider
      */
     protected function registerRouter()
     {
-        $this->app->singleton('router', function ($app) {
+        $this->app['router'] = $this->app->share(function ($app) {
             return new Router($app['events'], $app);
         });
     }
@@ -54,7 +47,7 @@ class RoutingServiceProvider extends ServiceProvider
      */
     protected function registerUrlGenerator()
     {
-        $this->app->singleton('url', function ($app) {
+        $this->app['url'] = $this->app->share(function ($app) {
             $routes = $app['router']->getRoutes();
 
             // The URL generator needs the route collection that exists on the router.
@@ -62,23 +55,14 @@ class RoutingServiceProvider extends ServiceProvider
             // and all the registered routes will be available to the generator.
             $app->instance('routes', $routes);
 
-            return new UrlGenerator(
+            $url = new UrlGenerator(
                 $routes, $app->rebinding(
                     'request', $this->requestRebinder()
-                ), $app['config']['app.asset_url']
+                )
             );
-        });
 
-        $this->app->extend('url', function (UrlGeneratorContract $url, $app) {
-            // Next we will set a few service resolvers on the URL generator so it can
-            // get the information it needs to function. This just provides some of
-            // the convenience features to this URL generator like "signed" URLs.
             $url->setSessionResolver(function () {
-                return $this->app['session'] ?? null;
-            });
-
-            $url->setKeyResolver(function () {
-                return $this->app->make('config')->get('app.key');
+                return $this->app['session'];
             });
 
             // If the route collection is "rebound", for example, when the routes stay
@@ -111,7 +95,7 @@ class RoutingServiceProvider extends ServiceProvider
      */
     protected function registerRedirector()
     {
-        $this->app->singleton('redirect', function ($app) {
+        $this->app['redirect'] = $this->app->share(function ($app) {
             $redirector = new Redirector($app['url']);
 
             // If the session is set on the application instance, we'll inject it into
@@ -132,19 +116,8 @@ class RoutingServiceProvider extends ServiceProvider
      */
     protected function registerPsrRequest()
     {
-        $this->app->bind(ServerRequestInterface::class, function ($app) {
-            if (class_exists(Psr17Factory::class) && class_exists(PsrHttpFactory::class)) {
-                $psr17Factory = new Psr17Factory;
-
-                return (new PsrHttpFactory($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory))
-                    ->createRequest($app->make('request'));
-            }
-
-            if (class_exists(ServerRequestFactory::class) && class_exists(DiactorosFactory::class)) {
-                return (new DiactorosFactory)->createRequest($app->make('request'));
-            }
-
-            throw new BindingResolutionException('Unable to resolve PSR request. Please install the symfony/psr-http-message-bridge and nyholm/psr7 packages.');
+        $this->app->bind('Psr\Http\Message\ServerRequestInterface', function ($app) {
+            return (new DiactorosFactory)->createRequest($app->make('request'));
         });
     }
 
@@ -155,16 +128,8 @@ class RoutingServiceProvider extends ServiceProvider
      */
     protected function registerPsrResponse()
     {
-        $this->app->bind(ResponseInterface::class, function () {
-            if (class_exists(NyholmPsrResponse::class)) {
-                return new NyholmPsrResponse;
-            }
-
-            if (class_exists(ZendPsrResponse::class)) {
-                return new ZendPsrResponse;
-            }
-
-            throw new BindingResolutionException('Unable to resolve PSR response. Please install the nyholm/psr7 package.');
+        $this->app->bind('Psr\Http\Message\ResponseInterface', function ($app) {
+            return new PsrResponse();
         });
     }
 
@@ -175,20 +140,8 @@ class RoutingServiceProvider extends ServiceProvider
      */
     protected function registerResponseFactory()
     {
-        $this->app->singleton(ResponseFactoryContract::class, function ($app) {
-            return new ResponseFactory($app[ViewFactoryContract::class], $app['redirect']);
-        });
-    }
-
-    /**
-     * Register the controller dispatcher.
-     *
-     * @return void
-     */
-    protected function registerControllerDispatcher()
-    {
-        $this->app->singleton(ControllerDispatcherContract::class, function ($app) {
-            return new ControllerDispatcher($app);
+        $this->app->singleton('Illuminate\Contracts\Routing\ResponseFactory', function ($app) {
+            return new ResponseFactory($app['Illuminate\Contracts\View\Factory'], $app['redirect']);
         });
     }
 }

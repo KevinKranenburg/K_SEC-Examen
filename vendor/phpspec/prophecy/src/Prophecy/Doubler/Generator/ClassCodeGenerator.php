@@ -11,9 +11,6 @@
 
 namespace Prophecy\Doubler\Generator;
 
-use Prophecy\Doubler\Generator\Node\ReturnTypeNode;
-use Prophecy\Doubler\Generator\Node\TypeNodeAbstract;
-
 /**
  * Class code creator.
  * Generates PHP code for specific class node tree.
@@ -22,10 +19,6 @@ use Prophecy\Doubler\Generator\Node\TypeNodeAbstract;
  */
 class ClassCodeGenerator
 {
-    public function __construct(TypeHintReference $typeHintReference = null)
-    {
-    }
-
     /**
      * Generates PHP code for class node.
      *
@@ -67,32 +60,41 @@ class ClassCodeGenerator
             $method->returnsReference() ? '&':'',
             $method->getName(),
             implode(', ', $this->generateArguments($method->getArguments())),
-            ($ret = $this->generateTypes($method->getReturnTypeNode())) ? ': '.$ret : ''
+            version_compare(PHP_VERSION, '7.0', '>=') && $method->hasReturnType()
+                ? sprintf(': %s', $method->getReturnType())
+                : ''
         );
         $php .= $method->getCode()."\n";
 
         return $php.'}';
     }
 
-    private function generateTypes(TypeNodeAbstract $typeNode): string
-    {
-        if (!$typeNode->getTypes()) {
-            return '';
-        }
-
-        // When we require PHP 8 we can stop generating ?foo nullables and remove this first block
-        if ($typeNode->canUseNullShorthand()) {
-            return sprintf( '?%s', $typeNode->getNonNullTypes()[0]);
-        } else {
-            return join('|', $typeNode->getTypes());
-        }
-    }
-
     private function generateArguments(array $arguments)
     {
-        return array_map(function (Node\ArgumentNode $argument){
+        return array_map(function (Node\ArgumentNode $argument) {
+            $php = '';
 
-            $php = $this->generateTypes($argument->getTypeNode());
+            if ($hint = $argument->getTypeHint()) {
+                switch ($hint) {
+                    case 'array':
+                    case 'callable':
+                        $php .= $hint;
+                        break;
+
+                    case 'string':
+                    case 'int':
+                    case 'float':
+                    case 'bool':
+                        if (version_compare(PHP_VERSION, '7.0', '>=')) {
+                            $php .= $hint;
+                            break;
+                        }
+                        // Fall-through to default case for PHP 5.x
+
+                    default:
+                        $php .= '\\'.$hint;
+                }
+            }
 
             $php .= ' '.($argument->isPassedByReference() ? '&' : '');
 

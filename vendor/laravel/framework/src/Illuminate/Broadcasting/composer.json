@@ -2,7 +2,7 @@
     "name": "illuminate/broadcasting",
     "description": "The Illuminate Broadcasting package.",
     "license": "MIT",
-    "homepage": "https://laravel.com",
+    "homepage": "http://laravel.com",
     "support": {
         "issues": "https://github.com/laravel/framework/issues",
         "source": "https://github.com/laravel/framework"
@@ -10,17 +10,13 @@
     "authors": [
         {
             "name": "Taylor Otwell",
-            "email": "taylor@laravel.com"
+            "email": "taylorotwell@gmail.com"
         }
     ],
     "require": {
-        "php": "^7.2",
-        "ext-json": "*",
-        "psr/log": "^1.0",
-        "illuminate/bus": "^6.0",
-        "illuminate/contracts": "^6.0",
-        "illuminate/queue": "^6.0",
-        "illuminate/support": "^6.0"
+        "php": ">=5.5.9",
+        "illuminate/contracts": "5.2.*",
+        "illuminate/support": "5.2.*"
     },
     "autoload": {
         "psr-4": {
@@ -29,14 +25,11 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "6.x-dev"
+            "dev-master": "5.2-dev"
         }
     },
     "suggest": {
-        "pusher/pusher-php-server": "Required to use the Pusher broadcast driver (^4.0)."
-    },
-    "config": {
-        "sort-packages": true
+        "pusher/pusher-php-server": "Required to use the Pusher broadcast driver (~2.0)."
     },
     "minimum-stability": "dev"
 }

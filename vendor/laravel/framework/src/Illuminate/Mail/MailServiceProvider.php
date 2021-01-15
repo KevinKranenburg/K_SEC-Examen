@@ -2,15 +2,18 @@
 
 namespace Illuminate\Mail;
 
-use Illuminate\Contracts\Support\DeferrableProvider;
-use Illuminate\Support\Arr;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
-use Swift_DependencyContainer;
 use Swift_Mailer;
+use Illuminate\Support\ServiceProvider;
 
-class MailServiceProvider extends ServiceProvider implements DeferrableProvider
+class MailServiceProvider extends ServiceProvider
 {
+    /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = true;
+
     /**
      * Register the service provider.
      *
@@ -19,20 +22,8 @@ class MailServiceProvider extends ServiceProvider implements DeferrableProvider
     public function register()
     {
         $this->registerSwiftMailer();
-        $this->registerIlluminateMailer();
-        $this->registerMarkdownRenderer();
-    }
 
-    /**
-     * Register the Illuminate mailer instance.
-     *
-     * @return void
-     */
-    protected function registerIlluminateMailer()
-    {
         $this->app->singleton('mailer', function ($app) {
-            $config = $app->make('config')->get('mail');
-
             // Once we have create the mailer instance, we will set a container instance
             // on the mailer. This allows us to resolve mailer classes via containers
             // for maximum testability on said classes instead of passing Closures.
@@ -40,15 +31,21 @@ class MailServiceProvider extends ServiceProvider implements DeferrableProvider
                 $app['view'], $app['swift.mailer'], $app['events']
             );
 
-            if ($app->bound('queue')) {
-                $mailer->setQueue($app['queue']);
+            $this->setMailerDependencies($mailer, $app);
+
+            // If a "from" address is set, we will set it on the mailer so that all mail
+            // messages sent by the applications will utilize the same "from" address
+            // on each one, which makes the developer's life a lot more convenient.
+            $from = $app['config']['mail.from'];
+
+            if (is_array($from) && isset($from['address'])) {
+                $mailer->alwaysFrom($from['address'], $from['name']);
             }
 
-            // Next we will set all of the global addresses on this mailer, which allows
-            // for easy unification of all "from" addresses as well as easy debugging
-            // of sent messages since they get be sent into a single email address.
-            foreach (['from', 'reply_to', 'to'] as $type) {
-                $this->setGlobalAddress($mailer, $config, $type);
+            $to = $app['config']['mail.to'];
+
+            if (is_array($to) && isset($to['address'])) {
+                $mailer->alwaysTo($to['address'], $to['name']);
             }
 
             return $mailer;
@@ -56,19 +53,18 @@ class MailServiceProvider extends ServiceProvider implements DeferrableProvider
     }
 
     /**
-     * Set a global address on the mailer by type.
+     * Set a few dependencies on the mailer instance.
      *
      * @param  \Illuminate\Mail\Mailer  $mailer
-     * @param  array  $config
-     * @param  string  $type
+     * @param  \Illuminate\Foundation\Application  $app
      * @return void
      */
-    protected function setGlobalAddress($mailer, array $config, $type)
+    protected function setMailerDependencies($mailer, $app)
     {
-        $address = Arr::get($config, $type);
+        $mailer->setContainer($app);
 
-        if (is_array($address) && isset($address['address'])) {
-            $mailer->{'always'.Str::studly($type)}($address['address'], $address['name']);
+        if ($app->bound('queue')) {
+            $mailer->setQueue($app['queue.connection']);
         }
     }
 
@@ -84,13 +80,7 @@ class MailServiceProvider extends ServiceProvider implements DeferrableProvider
         // Once we have the transporter registered, we will register the actual Swift
         // mailer instance, passing in the transport instances, which allows us to
         // override this transporter instances during app start-up if necessary.
-        $this->app->singleton('swift.mailer', function ($app) {
-            if ($domain = $app->make('config')->get('mail.domain')) {
-                Swift_DependencyContainer::getInstance()
-                                ->register('mime.idgenerator.idright')
-                                ->asValue($domain);
-            }
-
+        $this->app['swift.mailer'] = $this->app->share(function ($app) {
             return new Swift_Mailer($app['swift.transport']->driver());
         });
     }
@@ -102,31 +92,8 @@ class MailServiceProvider extends ServiceProvider implements DeferrableProvider
      */
     protected function registerSwiftTransport()
     {
-        $this->app->singleton('swift.transport', function ($app) {
+        $this->app['swift.transport'] = $this->app->share(function ($app) {
             return new TransportManager($app);
-        });
-    }
-
-    /**
-     * Register the Markdown renderer instance.
-     *
-     * @return void
-     */
-    protected function registerMarkdownRenderer()
-    {
-        if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__.'/resources/views' => $this->app->resourcePath('views/vendor/mail'),
-            ], 'laravel-mail');
-        }
-
-        $this->app->singleton(Markdown::class, function ($app) {
-            $config = $app->make('config');
-
-            return new Markdown($app->make('view'), [
-                'theme' => $config->get('mail.markdown.theme', 'default'),
-                'paths' => $config->get('mail.markdown.paths', []),
-            ]);
         });
     }
 
@@ -137,8 +104,6 @@ class MailServiceProvider extends ServiceProvider implements DeferrableProvider
      */
     public function provides()
     {
-        return [
-            'mailer', 'swift.mailer', 'swift.transport', Markdown::class,
-        ];
+        return ['mailer', 'swift.mailer', 'swift.transport'];
     }
 }

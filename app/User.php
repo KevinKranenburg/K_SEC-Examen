@@ -2,14 +2,15 @@
 
 namespace App;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
+/**
+ * Class User.
+ *
+ * @property int $id
+ */
 class User extends Authenticatable
 {
-    use Notifiable;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -29,11 +30,42 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * Get videos.
      *
-     * @var array
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    public function getVideos()
+    {
+        return $this->hasMany(\App\Video::class);
+    }
+
+    /**
+     * Get ApiKey.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function apiKey()
+    {
+        return $this->hasOne('Chrisbjr\ApiGuard\Models\ApiKey');
+    }
+
+    /**
+     * Get likes.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function getLikes()
+    {
+        return $this->hasMany(\App\LikeDislike::class);
+    }
+
+    /**
+     * Get comments.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function getComments()
+    {
+        return $this->hasMany(\App\Comment::class);
+    }
 }

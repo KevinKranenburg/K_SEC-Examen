@@ -1,0 +1,52 @@
+.glyphicon-refresh-animate {
+    -animation: spin .7s infinite linear;
+    -webkit-animation: spin2 .7s infinite linear;
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}
+
+#drop-zone {
+    /*Sort of important*/
+    height: 200px;
+    position:fixed;
+    border: 2px dashed rgba(0,0,0,.3);
+    border-radius: 20px;
+    font-family: Arial;
+    text-align: center;
+    position: relative;
+    line-height: 180px;
+    font-size: 20px;
+    color: rgba(0,0,0,.3);
+}
+
+.drop-zoneButton {
+    position: absolute;
+    cursor: pointer;
+    top: 50%;
+    margin-top: 20px;
+    line-height: 26px;
+    font-size: 12px;
+    /*width: 250px;*/
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+}
+.videoCard{
+    width:350px;
+    padding: 10px;
+}
+.videoList {
+    margin-bottom: 50px !important;
+}
+/*# sourceMappingURL=all.css.map */
