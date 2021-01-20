@@ -157,3 +157,7 @@ a:after {
 #c p {
 	color: white
 }
+
+.hide {
+    display: none !important;
+}

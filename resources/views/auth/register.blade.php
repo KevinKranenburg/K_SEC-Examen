@@ -14,7 +14,7 @@
 
         @if (count($errors) > 0)
             <div class="alert alert-danger">
-                <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                <strong>Whoops!</strong> Zijn alle velden goed ingevuld?<br><br>
                 <ul>
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -24,11 +24,11 @@
         @endif
 
         <div class="register-box-body">
-            <p class="login-box-msg">Register</p>
+            <p class="login-box-msg">Registreer</p>
             <form action="{{ url('/register') }}" method="post">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="form-group has-feedback">
-                    <input type="text" class="form-control" placeholder="Full name" name="name" value="{{ old('name') }}"/>
+                    <input type="text" class="form-control" placeholder="Naam" name="name" value="{{ old('name') }}"/>
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
                 </div>
                 <div class="form-group has-feedback">
@@ -36,11 +36,11 @@
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                 </div>
                 <div class="form-group has-feedback">
-                    <input type="password" class="form-control" placeholder="Password" name="password"/>
+                    <input type="password" class="form-control" placeholder="Wachtwoord" name="password"/>
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 </div>
                 <div class="form-group has-feedback">
-                    <input type="password" class="form-control" placeholder="Retype password" name="password_confirmation"/>
+                    <input type="password" class="form-control" placeholder="Herhaal Wachtwoord" name="password_confirmation"/>
                     <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
                 </div>
                 <div class="row">
@@ -48,7 +48,7 @@
                         
                     </div><!-- /.col -->
                     <div class="col-xs-4">
-                        <button type="submit" class="btn btn-primary btn-block btn-flat">Register</button>
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">Registreer</button>
                     </div><!-- /.col -->
                 </div>
             </form>

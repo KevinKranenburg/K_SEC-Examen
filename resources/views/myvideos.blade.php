@@ -26,15 +26,15 @@
                                         <option>@{{video.category}}</option>
                                     </optgroup>
                                     <optgroup label="Categorys">
-                                        <option>Movie</option>
-                                        <option>Music</option>
+                                        <option>Reportage</option>
+                                        <option>Muziek</option>
                                         <option>Sport</option>
                                         <option>Games</option>
-                                        <option>Other</option>
+                                        <option>Overige</option>
                                     </optgroup>
                                 </select>
                                 <button type="button" class="btn btn-success pull-left updateVideo" @click="updateVideo(video.id)"><i class="fa fa-pencil" aria-hidden="true"></i>Update</button>
-                                <button type="button" class="btn btn-danger pull-right deleteVideo" @click="deleteVideo(video.id)"><i class="fa fa-trash" aria-hidden="true"></i> Delete</button>
+                                <button type="button" class="btn btn-danger pull-right deleteVideo" @click="deleteVideo(video.id)"><i class="fa fa-trash" aria-hidden="true"></i> Verwijder</button>
                             </div>
                         </div>
                     </li>

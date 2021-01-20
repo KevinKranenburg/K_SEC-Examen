@@ -1,13 +1,13 @@
 <template>
     <div id="sidebar-wrapper">
         <ul class="sidebar-nav">
-            <li><a href="/upload"><span class="glyphicon glyphicon-home"></span> My Home</a></li>
-            <li><a v-link="{ path: '/category/Movie' }"><span class="glyphicon glyphicon-film"></span> Movie</a></li>
-            <li><a v-link="{ path: '/category/Music' }"><span class="glyphicon glyphicon-headphones"></span> Music</a></li>
+            <li><a href="/upload"><span class="glyphicon glyphicon-upload"></span> Upload</a></li>
+            <li><a v-link="{ path: '/category/Movie' }"><span class="glyphicon glyphicon-film"></span> Reportage</a></li>
+            <li><a v-link="{ path: '/category/Music' }"><span class="glyphicon glyphicon-headphones"></span> Muziek</a></li>
             <li><a v-link="{ path: '/category/Sport' }"><i class="fa fa-futbol-o" aria-hidden="true"></i> Sport</a></li>
             <li><a v-link="{ path: '/category/Games' }"><i class="fa fa-gamepad" aria-hidden="true"></i> Games</a></li>
-            <li><a v-link="{ path: '/category/Other' }"><i class="fa fa-video-camera" aria-hidden="true"></i> Other</a></li>
-            <li><a v-link="{ path: '/best' }"><i class="fa fa-line-chart" aria-hidden="true"></i> Best Videos</a></li>
+            <li><a v-link="{ path: '/category/Other' }"><i class="fa fa-video-camera" aria-hidden="true"></i> overige</a></li>
+            <li><a v-link="{ path: '/best' }"><i class="fa fa-line-chart" aria-hidden="true"></i> Alle Videos</a></li>
             
         </ul>
     </div>

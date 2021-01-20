@@ -28,8 +28,8 @@
                     <div class="form-inline form-add-comment" v-if="isLoggedIn == 1">
                         <div v-if="comment.user_id ==  getUserLogin().id">
                             <input class="form-control" id="your-update-comment{{comment.id}}" type="text" placeholder="{{comment.comment}}" />
-                            <button @click="updateComment(comment.id)" class="btn btn-success btn-comment">Update</button>
-                            <button @click="deleteComment(comment.id)" class="btn btn-danger btn-comment">Delete</button>
+                            <button @click="updateComment(comment.id)" class="btn hide btn-success btn-comment">Update</button>
+                            <button @click="deleteComment(comment.id)" class="btn hide btn-danger btn-comment">Delete</button>
                         </div>
                     </div>
                 </div>

@@ -20,7 +20,7 @@
 
         @if (count($errors) > 0)
             <div class="alert alert-danger">
-                <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                <strong>Whoops!</strong> Zijn alle velden goed ingevuld?<br><br>
                 <ul>
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -30,7 +30,7 @@
         @endif
 
         <div class="login-box-body">
-            <p class="login-box-msg">Reset Password</p>
+            <p class="login-box-msg">Wijzig wachtwoord</p>
             <form action="{{ url('/password/email') }}" method="post">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="form-group has-feedback">
@@ -42,7 +42,7 @@
                     <div class="col-xs-2">
                     </div><!-- /.col -->
                     <div class="col-xs-8">
-                        <button type="submit" class="btn btn-primary btn-block btn-flat">Send Password Reset Link</button>
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">Stuur  link</button>
                     </div><!-- /.col -->
                     <div class="col-xs-2">
                     </div><!-- /.col -->
@@ -50,7 +50,7 @@
             </form>
 
             <a href="{{ url('/login') }}">Log in</a><br>
-            <a href="{{ url('/register') }}" class="text-center">Register a new membership</a>
+            <a href="{{ url('/register') }}" class="text-center">Registreer</a>
 
         </div><!-- /.login-box-body -->
 

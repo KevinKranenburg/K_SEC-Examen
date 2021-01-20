@@ -1,6 +1,6 @@
 .videoCard{
     width:350px;
-    padding: 10px;
+    border-radius: 10px;
 }
 .videoList {
     margin-bottom: 50px !important;

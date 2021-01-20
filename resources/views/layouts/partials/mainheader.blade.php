@@ -4,7 +4,7 @@
     <!-- Logo -->
     <a href="{{ url('/home') }}" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
-        <span class="logo-mini"><b>L</b>T</span>
+        <span class="logo-mini"><b>V</b>Box</span>
         <!-- logo for regular state and mobile devices -->
         <span class="logo-lg"><b>Video</b>Box </span>
     </a>
@@ -42,10 +42,10 @@
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    <a href="{{ url('/profile') }}" class="btn btn-default btn-flat">Profile</a>
+                                    <a href="{{ url('/profile') }}" class="btn btn-default btn-flat">Profiel</a>
                                 </div>
                                 <div class="pull-right">
-                                    <a href="{{ url('/logout') }}" class="btn btn-default btn-flat">Sign out</a>
+                                    <a href="{{ url('/logout') }}" class="btn btn-default btn-flat">Log uit</a>
                                 </div>
                             </li>
                         </ul>

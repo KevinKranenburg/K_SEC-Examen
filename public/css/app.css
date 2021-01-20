@@ -2993,7 +2993,6 @@ fieldset[disabled] .btn-warning.active {
   color: #fff;
   background-color: #d9534f;
   border-color: #d43f3a;
-  display: none;
 }
 .btn-danger:hover,
 .btn-danger:focus,
