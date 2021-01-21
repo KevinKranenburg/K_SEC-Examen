@@ -1,6 +1,6 @@
 <template>
     <div class="side search showing" id="searchForm">
-        <input type="search" @keyup.enter.prevent="search" v-model="name" placeholder=" Search">
+        <input type="search" @keyup.enter.prevent="search" v-model="name" placeholder=" Zoek Video">
     </div>
 </template>
 

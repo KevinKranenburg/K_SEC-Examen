@@ -15193,7 +15193,7 @@ var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.user-register{\n    font-family: 'Raleway', sans-serif;\n    font-size: 13px;;\n}\n")
 "use strict";
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<a href=\"/register\" class=\"user-register\"><span class=\"glyphicon glyphicon-user\"></span> Sign Up</a>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<a href=\"/register\" class=\"user-register\"><span class=\"glyphicon glyphicon-user\"></span> Registreer</a>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

@@ -18,7 +18,7 @@
                     <input type="hidden" name="_token" value="{{ Session::getToken() }}">
                     <div class="form-group">
                         <label for="name"></label>
-                        <input type="text" class="form-control" name="name" id="name" placeholder="Name">
+                        <input type="text" class="form-control" name="name" id="name" placeholder="Titel">
                     </div>
 
                     <div class="form-group">

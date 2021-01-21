@@ -1,5 +1,5 @@
 <template>
-    <a href="/register" class="user-register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+    <a href="/register" class="user-register"><span class="glyphicon glyphicon-user"></span> Registreer</a></li>
 </template>
 <style>
     .user-register{
